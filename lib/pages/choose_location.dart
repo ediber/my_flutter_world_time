@@ -10,8 +10,14 @@ class _ChooseLocationState extends State<ChooseLocation> {
   int counter = 0;
 
   List<WorldTime> locations = [
-    WorldTime(url: 'Europe/London', location: 'London', flag: 'greece.png'),
-    WorldTime(url: 'Europe/London', location: 'London', flag: 'greece.png'),
+    WorldTime(url: 'Europe/London', location: 'London', flag: 'uk.png'),
+    WorldTime(url: 'Europe/Berlin', location: 'Athens', flag: 'greece.png'),
+    WorldTime(url: 'Africa/Cairo', location: 'Cairo', flag: 'egypt.png'),
+    WorldTime(url: 'Africa/Nairobi', location: 'Nairobi', flag: 'kenya.png'),
+    WorldTime(url: 'America/Chicago', location: 'Chicago', flag: 'usa.png'),
+    WorldTime(url: 'America/New_York', location: 'New York', flag: 'usa.png'),
+    WorldTime(url: 'Asia/Seoul', location: 'Seoul', flag: 'south_korea.png'),
+    WorldTime(url: 'Asia/Jakarta', location: 'Jakarta', flag: 'indonesia.png'),
   ];
 
   @override
@@ -30,16 +36,35 @@ class _ChooseLocationState extends State<ChooseLocation> {
           itemBuilder: (context, index) {
             //   var location = locations[index];
             return Card(
-              child: ListTile(
-                onTap: () {},
-                title: Text('${locations[index].location}'),
-                leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/${locations[index].flag}'),
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: ListTile(
+                  onTap: () {
+                    locationSelected(locations[index]);
+                  },
+                  title: Text('${locations[index].location}'),
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage('assets/${locations[index].flag}'),
+                  ),
                 ),
               ),
             );
           },
         )
     );
+  }
+
+  void locationSelected(WorldTime instance) async {
+    await instance.getTime();
+
+    print(instance.location);
+    print(instance.isDayTime);
+
+    Navigator.pop(context, {
+      'location': instance.location,
+      'time': instance.time,
+      'flag': instance.flag,
+      'isDayTime': instance.isDayTime,
+    });
   }
 }

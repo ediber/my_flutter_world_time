@@ -13,7 +13,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
 
-    data = ModalRoute.of(context).settings.arguments;
+    data = data.isNotEmpty ? data : ModalRoute.of(context).settings.arguments;
     if(data['isDayTime']){
       color = Colors.cyan;
     } else {
@@ -26,14 +26,22 @@ class _HomeState extends State<Home> {
         children: [
           SizedBox(height: 100),
           FlatButton.icon(
-            onPressed: () {
-              Navigator.pushNamed(context, '/location');
+            onPressed: () async{
+              dynamic result = await Navigator.pushNamed(context, '/choose_location');
+              setState(() {
+                data = {
+                  'location': result['location'],
+                  'time': result['time'],
+                  'flag ': result['flag'],
+                  'isDayTime': result['isDayTime'],
+                };
+              });
             },
             icon: Icon(Icons.edit_location),
             label: Text('edit location'),
           ),
           Text(data['location']),
-          Text(data['flag']),
+          // Text(data['flag']),
           Text(data['time']),
         ],
       ),
